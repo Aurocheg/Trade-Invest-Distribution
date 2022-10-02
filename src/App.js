@@ -1,9 +1,9 @@
+import DrawerAppBar from "./components/AppBar/AppBar";
+
 function App() {
     return (
         <div className="App">
-            <header className="App-header">
-                <div>Hello world!</div>
-            </header>
+            <DrawerAppBar></DrawerAppBar>
         </div>
     )
 }
