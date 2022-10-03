@@ -1,21 +1,24 @@
 import {
     AppBar,
     Box,
-    Drawer,
     IconButton,
     List,
     ListItem,
     ListItemButton,
     ListItemText,
     Toolbar,
-    Button
+    Button, Container
 } from "@mui/material"
-import {MenuIcon} from '@mui/icons-material'
+import MenuIcon from '@mui/icons-material/Menu'
+
 import {useState} from "react"
 import {Link} from "react-router-dom"
+import HeaderDrawer from "./HeaderDrawer"
+import logo from "../../assets/logo.png"
+import {blueGrey, lightBlue} from "@mui/material/colors";
 
 const drawerWidth = 240
-const navItems = ["Главная", "О компании", "Услуги", "Устав", "Сертификаты", "Контакты"]
+const navItems = ["Home", "About", "Services", "Documents", "Contacts"]
 
 export default function Header(props) {
     const {window} = props
@@ -25,18 +28,28 @@ export default function Header(props) {
         setMobileOpen(!mobileOpen)
     }
 
+    const drawerNavItems = navItems.map((item, index) => (
+        <Link to={"" + item.toLowerCase()} key={index} style={{textDecoration: "none"}}>
+            <ListItem key={item} disablePadding>
+                <ListItemButton sx={{textAlign: "center"}}>
+                    <ListItemText primary={item} />
+                </ListItemButton>
+            </ListItem>
+        </Link>
+    ))
+
+    const mainNavItems = navItems.map((item, index) => (
+        <Link to={"" + item.toLowerCase()} key={index} style={{textDecoration: "none"}}>
+            <Button key={item} sx={{ color: blueGrey }}>
+                {item}
+            </Button>
+        </Link>
+    ))
+
     const drawer = (
         <Box onClick={handleDrawerToggle} sx={{textAlign: "center"}}>
             <List>
-                {navItems.map(item => (
-                    <Link to="/home">
-                        <ListItem key={item} disablePadding>
-                            <ListItemButton sx={{textAlign: "center"}}>
-                                <ListItemText primary={item} />
-                            </ListItemButton>
-                        </ListItem>
-                    </Link>
-                ))}
+                {drawerNavItems}
             </List>
         </Box>
     )
@@ -45,8 +58,8 @@ export default function Header(props) {
 
     return (
         <Box sx={{display: "flex"}}>
-            <AppBar component="nav">
-                <Toolbar>
+            <AppBar component="nav" style={{backgroundColor: "white"}}>
+                <Toolbar sx={{display: "flex", justifyContent: {xs: "flex-start", sm: "center"}}}>
                     <IconButton
                         color="inherit"
                         aria-label="open drawer"
@@ -57,31 +70,17 @@ export default function Header(props) {
                         <MenuIcon />
                     </IconButton>
                     <Box sx={{ display: { xs: "none", sm: "block" }}}>
-                        {navItems.map(item => (
-                            <Button key={item} sx={{ color: '#fff' }}>
-                                {item}
-                            </Button>
-                        ))}
+                        {mainNavItems}
                     </Box>
                 </Toolbar>
             </AppBar>
-            <Box component="nav">
-                <Drawer
-                    container={container}
-                    variant="temporary"
-                    open={mobileOpen}
-                    onClose={handleDrawerToggle}
-                    ModalProps={{
-                        keepMounted: true, // Better open performance on mobile.
-                    }}
-                    sx={{
-                        display: { xs: 'block', sm: 'none' },
-                        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-                    }}
-                >
-                    {drawer}
-                </Drawer>
-            </Box>
+            <HeaderDrawer container={container}
+                          variant="temporary"
+                          open={mobileOpen}
+                          onClose={() => handleDrawerToggle()}
+                          drawerWidth={drawerWidth}
+                          drawer={drawer}
+            />
         </Box>
     )
 }
