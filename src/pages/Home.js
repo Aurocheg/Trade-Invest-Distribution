@@ -1,9 +1,12 @@
-import {Box, Button} from "@mui/material"
+import {Box, Button, Typography} from "@mui/material"
 
 function Home() {
     return (
         <Box>
-            <Button variant="contained">Hello world</Button>
+            <Typography variant="h3" textAlign="center">
+                Home
+            </Typography>
+
         </Box>
     )
 }

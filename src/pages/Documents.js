@@ -1,6 +1,12 @@
+import {Box, Typography} from "@mui/material"
+
 function Documents() {
     return (
-        <div>Documents</div>
+        <Box>
+            <Typography variant="h3" textAlign="center">
+                Documents
+            </Typography>
+        </Box>
     )
 }
 

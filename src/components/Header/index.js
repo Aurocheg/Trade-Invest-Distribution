@@ -1,3 +1,4 @@
+// MARK: - Material UI Components
 import {
     AppBar,
     Box,
@@ -7,18 +8,29 @@ import {
     ListItemButton,
     ListItemText,
     Toolbar,
-    Button, Container
+    Button, Container, Drawer, Icon
 } from "@mui/material"
-import MenuIcon from '@mui/icons-material/Menu'
 
+// MARK: - Material UI Icons
+import HomeIcon from '@mui/icons-material/Home'
+import GroupsIcon from '@mui/icons-material/Groups'
+import EngineeringIcon from '@mui/icons-material/Engineering'
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile'
+import CallIcon from '@mui/icons-material/Call'
+import MenuIcon from '@mui/icons-material/Menu'
+import LanguageIcon from '@mui/icons-material/Language'
+
+// MARK: - Other
 import {useState} from "react"
 import {Link} from "react-router-dom"
-import HeaderDrawer from "./HeaderDrawer"
 import logo from "../../assets/logo.png"
-import {blueGrey, lightBlue} from "@mui/material/colors";
 
+// MARK: - Variables
 const drawerWidth = 240
-const navItems = ["Home", "About", "Services", "Documents", "Contacts"]
+const navItems = {
+    titles: ["Home", "About", "Services", "Documents", "Contacts"],
+    icons: [HomeIcon, GroupsIcon, EngineeringIcon, InsertDriveFileIcon, CallIcon]
+}
 
 export default function Header(props) {
     const {window} = props
@@ -28,19 +40,22 @@ export default function Header(props) {
         setMobileOpen(!mobileOpen)
     }
 
-    const drawerNavItems = navItems.map((item, index) => (
-        <Link to={"" + item.toLowerCase()} key={index} style={{textDecoration: "none"}}>
+    // MARK: Header Components
+    const drawerNavItems = navItems.titles.map((item, index) => (
+        <Link to={"" + item.toLowerCase()} key={index} style={{textDecoration: "none", color: "rgb(25, 118, 210)"}}>
             <ListItem key={item} disablePadding>
-                <ListItemButton sx={{textAlign: "center"}}>
+                <ListItemButton>
+                    <Icon component={navItems.icons[index]} style={{marginRight: "15px"}} />
                     <ListItemText primary={item} />
                 </ListItemButton>
             </ListItem>
         </Link>
     ))
 
-    const mainNavItems = navItems.map((item, index) => (
+    const mainNavItems = navItems.titles.map((item, index) => (
         <Link to={"" + item.toLowerCase()} key={index} style={{textDecoration: "none"}}>
-            <Button key={item} sx={{ color: blueGrey }}>
+            <Button key={item} sx={{ color: "white", textTransform: "capitalize", marginRight: "10px"}}>
+                <Icon component={navItems.icons[index]} style={{marginRight: "5px"}} />
                 {item}
             </Button>
         </Link>
@@ -58,29 +73,45 @@ export default function Header(props) {
 
     return (
         <Box sx={{display: "flex"}}>
-            <AppBar component="nav" style={{backgroundColor: "white"}}>
-                <Toolbar sx={{display: "flex", justifyContent: {xs: "flex-start", sm: "center"}}}>
-                    <IconButton
-                        color="inherit"
-                        aria-label="open drawer"
-                        edge="start"
-                        onClick={handleDrawerToggle}
-                        sx={{mr: 2, display: {sm: "none"}}}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-                    <Box sx={{ display: { xs: "none", sm: "block" }}}>
-                        {mainNavItems}
-                    </Box>
+            <AppBar component="nav">
+                <Toolbar>
+                    <Container sx={{display: "flex", justifyContent: {xs: "flex-start", sm: "space-between"}, alignItems: "center"}} maxWidth="lg">
+                        <IconButton
+                            color="inherit"
+                            aria-label="open drawer"
+                            edge="start"
+                            onClick={handleDrawerToggle}
+                            sx={{mr: 2, display: {sm: "none"}}}
+                        >
+                            <MenuIcon />
+                        </IconButton>
+                        <Link to="/home" style={{backgroundColor: "white", border: "1px solid #fff", borderRadius: "15px"}}>
+                            <img src={logo} width={100} height={60} alt="logo"/>
+                        </Link>
+                        <Box sx={{ display: { xs: "none", sm: "block" }}}>
+                            {mainNavItems}
+                        </Box>
+                        <IconButton component={LanguageIcon} style={{width: "40px", height: "40px", color: "#fff"}}/>
+                    </Container>
                 </Toolbar>
             </AppBar>
-            <HeaderDrawer container={container}
-                          variant="temporary"
-                          open={mobileOpen}
-                          onClose={() => handleDrawerToggle()}
-                          drawerWidth={drawerWidth}
-                          drawer={drawer}
-            />
+            <Box component="nav">
+                <Drawer
+                    container={container}
+                    variant="temporary"
+                    open={mobileOpen}
+                    onClose={handleDrawerToggle}
+                    ModalProps={{
+                        keepMounted: true, // Better open performance on mobile.
+                    }}
+                    sx={{
+                        display: { xs: 'block', sm: 'none' },
+                        '& .MuiDrawer-paper': {boxSizing: 'border-box', width: drawerWidth},
+                    }}
+                >
+                    {drawer}
+                </Drawer>
+            </Box>
         </Box>
     )
 }
